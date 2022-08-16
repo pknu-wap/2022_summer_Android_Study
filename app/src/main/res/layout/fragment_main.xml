@@ -124,4 +124,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/waplogo" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="35dp"
+        tools:layout_editor_absoluteY="129dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
