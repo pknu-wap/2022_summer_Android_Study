@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "264770270850",
+    "firebase_url": "https://dongbang-76ddc-default-rtdb.firebaseio.com",
+    "project_id": "dongbang-76ddc",
+    "storage_bucket": "dongbang-76ddc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264770270850:android:be1931333ec8a9d870669b",
+        "android_client_info": {
+          "package_name": "com.example.dongbangjupsho"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "264770270850-fi0p5862k42504v07h15j4m50u8307ii.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dongbangjupsho",
+            "certificate_hash": "cebde848d72394dc06da13b4db2323eb334edb5a"
+          }
+        },
+        {
+          "client_id": "264770270850-cn7glk8gtv2valivp1grikiq8438mpsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDocpyB0HwKAiZy8L4WbJIa5qkTRQf7V5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "264770270850-cn7glk8gtv2valivp1grikiq8438mpsd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
