@@ -9,8 +9,6 @@ import dagger.hilt.android.HiltAndroidApp
 class DongBangApp: Application() {
     override fun onCreate() {
         super.onCreate()
-
-
         KakaoSdk.init(this, com.example.dongbangjupsho.BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
