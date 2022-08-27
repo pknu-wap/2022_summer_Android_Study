@@ -95,4 +95,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
 
+    //navigation
+    def nav_version = "2.4.1"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
 }
