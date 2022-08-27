@@ -11,12 +11,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.dongbangjupsho.R
 import com.example.dongbangjupsho.presentation.user.component.HintTextField
+import com.example.dongbangjupsho.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun UserSignInScreen(
+    navController: NavController,
     viewModel: UserSignInViewModel = hiltViewModel()
 ){
 
@@ -32,7 +35,7 @@ fun UserSignInScreen(
                     scaffoldState.snackbarHostState.showSnackbar(event.message)
                 }
                 is UserSignInViewModel.UiEvent.SignInUser ->{
-                    //todo navigation
+                    navController.navigate(Screen.HomeScreen.route)
                 }
             }
         }

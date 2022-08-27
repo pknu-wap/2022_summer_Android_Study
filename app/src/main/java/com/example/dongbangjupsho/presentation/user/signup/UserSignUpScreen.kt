@@ -10,11 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.dongbangjupsho.presentation.user.component.HintTextField
+import com.example.dongbangjupsho.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun UserSignUpScreen(
+    navController: NavController,
     viewModel: UserSignUpViewModel = hiltViewModel()
 ){
     val userIdState = viewModel.userId.value
@@ -29,7 +32,7 @@ fun UserSignUpScreen(
                     scaffoldState.snackbarHostState.showSnackbar(event.message)
                 }
                 is UserSignUpViewModel.UiEvent.SignUpUser ->{
-                    //todo navigation
+                    navController.navigate(Screen.UserSignInScreen.route)
                 }
             }
         }

@@ -8,13 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun HomeView() {
-
-    //firebase db
-    val totalCount = 32
-    val isFirstVisit = true
+    fun HomeScreen(
+        navController: NavController
+    ) {
+        //firebase db
+        val totalCount = 32
+        val isFirstVisit = true
 
     Scaffold(
     ){
