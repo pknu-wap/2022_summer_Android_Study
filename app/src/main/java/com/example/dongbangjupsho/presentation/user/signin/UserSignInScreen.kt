@@ -78,10 +78,20 @@ fun UserSignInScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = { viewModel.onEvent(UserSignInEvent.SignInUser) }
+            Row(
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text("로그인")
+                Button(
+                    onClick = { viewModel.onEvent(UserSignInEvent.SignInUser) }
+                ) {
+                    Text("로그인")
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                Button(
+                    onClick = { navController.navigate(Screen.UserSignUpScreen.route) }
+                ) {
+                    Text("회원가입")
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
