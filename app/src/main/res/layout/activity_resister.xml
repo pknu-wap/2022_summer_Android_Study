@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFEB3B"
     tools:context=".ResisterActivity">
 
     <EditText
@@ -12,15 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="80dp"
         android:ems="10"
         android:hint="ID"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/login_info"
+        app:layout_constraintStart_toStartOf="@+id/login_info"
+        app:layout_constraintTop_toBottomOf="@+id/login_info" />
 
     <EditText
         android:id="@+id/et_pw"
@@ -65,11 +64,28 @@
         android:layout_marginTop="30dp"
         android:text="회원가입"
         android:textColor="#FFFFFF"
-        android:textSize="20"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:backgroundTint="#3F51B5"
         app:layout_constraintEnd_toEndOf="@+id/et_address"
         app:layout_constraintStart_toStartOf="@+id/et_address"
         app:layout_constraintTop_toBottomOf="@+id/et_address" />
+
+    <TextView
+        android:id="@+id/login_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="MyPocket"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

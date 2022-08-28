@@ -6,10 +6,10 @@
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/activity_join.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_list.xml" value="0.28125" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.48418426513671875" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.3476577758789063" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.32039286295572916" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.28125" />
-        <entry key="app/src/main/res/layout/activity_resister.xml" value="0.36042785644531256" />
+        <entry key="app/src/main/res/layout/activity_resister.xml" value="0.23244781494140626" />
         <entry key="app/src/main/res/layout/custom_comment.xml" value="0.28125" />
       </map>
     </option>

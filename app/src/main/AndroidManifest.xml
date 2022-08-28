@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mypocket">
 
-    <!--인터넷 권한 선언!-->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,18 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyPocket">
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ResisterActivity"
-            android:exported="false" />
-
+        <activity android:name="com.example.mypocket.LoginActivity"></activity>
+        <activity android:name="com.example.mypocket.ResisterActivity"></activity>
+        <activity android:name="com.example.mypocket.MainActivity"
+            android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
