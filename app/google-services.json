@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "80022405222",
+    "firebase_url": "https://wap-manager-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "wap-manager",
+    "storage_bucket": "wap-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80022405222:android:9d45a312ea46dede24eda7",
+        "android_client_info": {
+          "package_name": "com.example.wapmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80022405222-1uo2e19egi0heronsiknhacrk7350snc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYRzhXQRnxvkRYcxgkv9VdxoFkex1btG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80022405222-1uo2e19egi0heronsiknhacrk7350snc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

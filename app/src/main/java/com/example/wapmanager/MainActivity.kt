@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.wapmanager.databinding.ActivityMainBinding
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding //optional 안씀 becuase lateinit
@@ -25,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         //바텀 네비게이션 뷰와 네비게이션을 묶어줌
         NavigationUI.setupWithNavController(mBinding.myBottomNav, navController)
 //        setMainFragment()
+        val database = Firebase.database
+        val myRef = database.getReference("message")
+        myRef.setValue("Hello,Firebase!")
     }
 
 //    fun setMainFragment(){
