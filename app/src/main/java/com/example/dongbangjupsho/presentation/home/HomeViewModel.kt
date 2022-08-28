@@ -1,7 +1,7 @@
 package com.example.dongbangjupsho.presentation.home
 
 import androidx.lifecycle.ViewModel
-import com.example.dongbangjupsho.domain.repository.util.DB_KEY.Companion.HOME
+import com.example.dongbangjupsho.domain.util.DB_KEY.Companion.HOME
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

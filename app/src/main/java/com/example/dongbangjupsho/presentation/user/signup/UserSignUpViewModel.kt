@@ -5,20 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dongbangjupsho.presentation.user.TextFieldState
-import com.example.dongbangjupsho.presentation.user.UserInfo
-import com.google.firebase.auth.FirebaseAuth
+import com.example.dongbangjupsho.domain.model.UserInfo
+import com.example.dongbangjupsho.domain.repository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 
 @HiltViewModel
 class UserSignUpViewModel @Inject constructor(
-    private val firebaseAuth : FirebaseAuth
+    private val firebaseRepository: FirebaseRepository
 ) : ViewModel(){
 
     private val _userId = mutableStateOf(TextFieldState(hint = "사용자 이름"))
@@ -74,12 +72,12 @@ class UserSignUpViewModel @Inject constructor(
                 viewModelScope.launch {
                     if (userPassword.value == userConfirmPassword.value) {
                         try {
-                            if (signUpUser(UserInfo(
+                            if(firebaseRepository.signUp(UserInfo(
                                     userId = userId.value.text,
                                     password = userPassword.value.text
-                                    ))) {
+                                ))) {
                                 _eventFlow.emit(UiEvent.SignUpUser)
-                            } else {
+                            }else{
                                 _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
                             }
                         } catch (e: Exception) {
@@ -95,19 +93,6 @@ class UserSignUpViewModel @Inject constructor(
         }
     }
 
-    private suspend fun signUpUser(userInfo: UserInfo) : Boolean =
-        suspendCoroutine { cont ->
-            firebaseAuth.createUserWithEmailAndPassword(
-                userInfo.userId,
-                userInfo.password
-            ).addOnSuccessListener {
-                cont.resume(true)
-            }.addOnFailureListener {
-                cont.resume(false)
-            }.addOnCanceledListener {
-                cont.resume(false)
-            }
-        }
     sealed class UiEvent{
         data class ShowSnackbar(val message: String): UiEvent()
         object SignUpUser: UiEvent()

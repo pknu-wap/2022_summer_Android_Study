@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dongbangjupsho.presentation.user.TextFieldState
-import com.example.dongbangjupsho.presentation.user.UserInfo
-import com.google.firebase.auth.FirebaseAuth
+import com.example.dongbangjupsho.domain.model.UserInfo
+import com.example.dongbangjupsho.domain.repository.FirebaseRepository
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -25,7 +25,7 @@ import kotlin.coroutines.suspendCoroutine
 @HiltViewModel
 class UserSignInViewModel @Inject constructor(
     private val appContext: Application,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseRepository: FirebaseRepository
 ): ViewModel() {
 
     companion object{
@@ -71,7 +71,7 @@ class UserSignInViewModel @Inject constructor(
             is UserSignInEvent.SignInUser ->{
                 viewModelScope.launch {
                     try {
-                        if (signInUser(UserInfo(
+                        if (firebaseRepository.signIn(UserInfo(
                                 userId = userId.value.text,
                                 password = userPassword.value.text
                             ))) {
@@ -101,19 +101,6 @@ class UserSignInViewModel @Inject constructor(
             }
         }
     }
-    private suspend fun signInUser(userInfo: UserInfo) : Boolean =
-        suspendCoroutine { cont ->
-            firebaseAuth.signInWithEmailAndPassword(
-                userInfo.userId,
-                userInfo.password
-            ).addOnSuccessListener {
-                cont.resume(true)
-            }.addOnFailureListener {
-                cont.resume(false)
-            }.addOnCanceledListener {
-                cont.resume(false)
-            }
-        }
 
     private suspend fun handlekakaoSignIn() : Boolean =
         suspendCoroutine { cont ->

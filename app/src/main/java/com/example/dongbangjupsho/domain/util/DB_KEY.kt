@@ -1,4 +1,4 @@
-package com.example.dongbangjupsho.domain.repository.util
+package com.example.dongbangjupsho.domain.util
 
 class DB_KEY {
     companion object{
