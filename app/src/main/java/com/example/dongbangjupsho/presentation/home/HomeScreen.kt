@@ -1,4 +1,4 @@
-package com.example.dongbangjupsho.presentation
+package com.example.dongbangjupsho.presentation.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -8,12 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 @Composable
     fun HomeScreen(
-        navController: NavController
-    ) {
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
         //firebase db
         val totalCount = 32
         val isFirstVisit = true
@@ -34,6 +36,7 @@ import androidx.navigation.NavController
             Button(
                 onClick = {
                           //todo find Location
+                          viewModel.loadLocation()
                      },
             ){
                 if(isFirstVisit) {

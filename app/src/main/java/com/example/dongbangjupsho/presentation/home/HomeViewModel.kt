@@ -1,17 +1,24 @@
 package com.example.dongbangjupsho.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.dongbangjupsho.domain.util.DB_KEY.Companion.HOME
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import androidx.lifecycle.viewModelScope
+import com.example.dongbangjupsho.domain.location.LocationTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.suspendCoroutine
 
-
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val locationTracker: LocationTracker
 ): ViewModel(){
 
+    fun loadLocation(){
+        viewModelScope.launch {
+            locationTracker.getCurrentLocation()?.let{ location ->
+                Log.d("tag", location.longitude.toString())
+                Log.d("tag", location.latitude.toString())
+            }
+        }
+    }
 }

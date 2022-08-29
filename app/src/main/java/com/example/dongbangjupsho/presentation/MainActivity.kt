@@ -1,8 +1,12 @@
 package com.example.dongbangjupsho.presentation
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -11,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dongbangjupsho.presentation.home.HomeScreen
+import com.example.dongbangjupsho.presentation.home.HomeViewModel
 import com.example.dongbangjupsho.presentation.user.signup.UserSignUpViewModel
 import com.example.dongbangjupsho.presentation.user.signin.UserSignInScreen
 import com.example.dongbangjupsho.presentation.user.signup.UserSignUpScreen
@@ -22,10 +28,20 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val userSignUpViewModel : UserSignUpViewModel by viewModels()
+    private val viewModel : HomeViewModel by viewModels()
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ){
+            viewModel.loadLocation()
+        }
+        permissionLauncher.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
         setContent {
             DongBangJupShoTheme {
                 // A surface container using the 'background' color from the theme
