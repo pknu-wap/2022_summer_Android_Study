@@ -98,7 +98,6 @@ fun UserSignInScreen(
 
             IconButton(
                 onClick = {
-                    viewModel.kakaoSignIn()
                     //todo 화면 전환 처리 navigation
                 },
                 modifier = Modifier

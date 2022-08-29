@@ -1,5 +1,6 @@
 package com.example.dongbangjupsho.presentation.user.signup
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -69,30 +70,33 @@ class UserSignUpViewModel @Inject constructor(
                 )
             }
             is UserSignUpEvent.SignUpUser -> {
-                viewModelScope.launch {
-                    if (userPassword.value == userConfirmPassword.value) {
-                        try {
-                            if(firebaseRepository.signUp(UserInfo(
-                                    userId = userId.value.text,
-                                    password = userPassword.value.text
-                                ))) {
-                                _eventFlow.emit(UiEvent.SignUpUser)
-                            }else{
-                                _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                signUp()
+            }
+        }
+    }
+    private fun signUp(){
+        viewModelScope.launch{
+            viewModelScope.launch {
+                if (_userPassword.value.text == _userConfirmPassword.value.text) {
+                    try {
+                        if(firebaseRepository.signUp(UserInfo(
+                                userId = _userId.value.text,
+                                password = _userPassword.value.text))
+                        ) {
+                            _eventFlow.emit(UiEvent.SignUpUser)
+                        }else{
                             _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
                         }
-
-                    } else {
-                        _eventFlow.emit(UiEvent.ShowSnackbar("비밀번호가 일치하지 않습니다.."))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
                     }
+                } else {
+                    _eventFlow.emit(UiEvent.ShowSnackbar("비밀번호가 일치하지 않습니다.."))
                 }
             }
         }
     }
-
     sealed class UiEvent{
         data class ShowSnackbar(val message: String): UiEvent()
         object SignUpUser: UiEvent()
