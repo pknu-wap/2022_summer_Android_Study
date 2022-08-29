@@ -18,30 +18,30 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editId"
+        android:id="@+id/etEmail"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="32dp"
-        android:hint="아이디"
+        android:hint="email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <EditText
-        android:id="@+id/editPassword"
+        android:id="@+id/etPassword"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="32dp"
-        android:hint="비밀번호"
+        android:hint="password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editId" />
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
     <Button
         android:id="@+id/btnSignin"
@@ -52,18 +52,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.688"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
     <Button
         android:id="@+id/btnGoSignup"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
         android:text="회원가입"
-        app:layout_constraintEnd_toStartOf="@+id/btnSignin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
