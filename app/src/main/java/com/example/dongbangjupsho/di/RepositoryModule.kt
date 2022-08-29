@@ -1,7 +1,7 @@
 package com.example.dongbangjupsho.di
 
-import com.example.dongbangjupsho.data.repository.FirebaseRepositoryImpl
-import com.example.dongbangjupsho.domain.repository.FirebaseRepository
+import com.example.dongbangjupsho.data.repository.FirebaseAuthRepositoryImpl
+import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,8 +14,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseRepository(): FirebaseRepository{
-        return FirebaseRepositoryImpl()
+    fun provideFirebaseRepository(): FirebaseAuthRepository{
+        return FirebaseAuthRepositoryImpl()
     }
 
 }

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dongbangjupsho.presentation.user.TextFieldState
 import com.example.dongbangjupsho.domain.model.UserInfo
-import com.example.dongbangjupsho.domain.repository.FirebaseRepository
+import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserSignInViewModel @Inject constructor(
     private val appContext: Application,
-    private val firebaseRepository: FirebaseRepository
+    private val firebaseRepository: FirebaseAuthRepository
 ): ViewModel() {
 
     companion object{

@@ -1,5 +1,5 @@
 package com.example.dongbangjupsho.data.repository
-import com.example.dongbangjupsho.domain.repository.FirebaseRepository
+import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
 import com.example.dongbangjupsho.domain.model.UserInfo
 import com.example.dongbangjupsho.domain.util.DB_KEY.Companion.USER
 import com.example.dongbangjupsho.domain.util.FirebaseManager.firebaseAuth
@@ -7,7 +7,7 @@ import com.example.dongbangjupsho.domain.util.FirebaseManager.firebaseDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 
-class FirebaseRepositoryImpl : FirebaseRepository{
+class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
     override suspend fun signUp(userInfo: UserInfo): Boolean =
         suspendCancellableCoroutine { cont ->
             firebaseAuth.createUserWithEmailAndPassword(userInfo.userId, userInfo.password)
