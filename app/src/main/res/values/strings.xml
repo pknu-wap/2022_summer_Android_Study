@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DongBangJupSho</string>
+    <string name="dongBang_latitude">129.107886</string>
+    <string name="dongBang_longitude">35.1347223</string>
 </resources>
