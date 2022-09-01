@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dongbangjupsho.presentation.home.HomeScreen
 import com.example.dongbangjupsho.presentation.home.HomeViewModel
+import com.example.dongbangjupsho.presentation.home.UserEnterEvent
 import com.example.dongbangjupsho.presentation.user.signup.UserSignUpViewModel
 import com.example.dongbangjupsho.presentation.user.signin.UserSignInScreen
 import com.example.dongbangjupsho.presentation.user.signup.UserSignUpScreen
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ){
-            viewModel.loadLocation()
+            viewModel.onEvent(UserEnterEvent.LoadLocation)
         }
         permissionLauncher.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,

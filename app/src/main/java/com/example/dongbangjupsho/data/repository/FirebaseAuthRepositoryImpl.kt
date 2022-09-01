@@ -37,7 +37,7 @@ class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
                     cont.resume(false)
                 }
         }
-
+    //todo 날짜에 맞게
     private suspend fun registerUser(userInfo: UserInfo): Boolean =
         suspendCancellableCoroutine { cont ->
             firebaseDatabase.reference.child(USER).child(firebaseAuth.uid.toString())

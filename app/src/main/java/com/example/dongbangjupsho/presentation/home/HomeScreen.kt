@@ -16,9 +16,8 @@ import androidx.navigation.NavController
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel() //todo state hoisting mainActivity
 ) {
-        //firebase db
-        val isFirstVisit = true
-
+    //firebase db
+    val isFirstVisit = true
     Scaffold(
     ){
 
@@ -34,9 +33,9 @@ import androidx.navigation.NavController
 
             Button(
                 onClick = {
-                          //todo find Location
-                          viewModel.loadLocation()
-                     },
+                    viewModel.onEvent(UserEnterEvent.LoadLocation)
+                    viewModel.onEvent(UserEnterEvent.SetUserEnter)
+                          },
             ){
                 if(isFirstVisit) {
                     Text("입장")

@@ -1,5 +1,6 @@
 package com.example.dongbangjupsho.data.repository
 
+import android.util.Log
 import com.example.dongbangjupsho.domain.repository.FirebaseDatabaseRepository
 import com.example.dongbangjupsho.domain.util.DB_KEY.Companion.HOME
 import com.example.dongbangjupsho.domain.util.FirebaseManager
@@ -30,4 +31,18 @@ class FirebaseDatabaseRepositoryImpl : FirebaseDatabaseRepository {
                 })
     }
 
+    override suspend fun setTodayEnterPeople(uid: String): Boolean =
+        suspendCancellableCoroutine { cont ->
+            FirebaseManager.firebaseDatabase.reference.child(HOME).child("TodayEnter")
+                .child("uid").setValue(uid)
+                .addOnSuccessListener {
+                    cont.resume(true)
+                }
+                .addOnFailureListener{
+                    cont.resume(false)
+                }
+                .addOnCanceledListener{
+                    cont.resume(false)
+                }
+        }
 }

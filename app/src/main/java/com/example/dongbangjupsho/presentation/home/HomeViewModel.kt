@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dongbangjupsho.domain.location.LocationTracker
 import com.example.dongbangjupsho.domain.repository.FirebaseDatabaseRepository
+import com.example.dongbangjupsho.domain.util.FirebaseManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,6 +26,17 @@ class HomeViewModel @Inject constructor(
         getTodayEnterPeople()
     }
 
+    fun onEvent(event : UserEnterEvent){
+        when(event){
+            is UserEnterEvent.LoadLocation -> {
+                loadLocation()
+            }
+            is UserEnterEvent.SetUserEnter -> {
+                setTodayEnterPeople()
+            }
+        }
+    }
+
     private fun getTodayEnterPeople(){
         viewModelScope.launch {
             databaseRepository.getTodayEnterPeople()?.let{ peopleCount ->
@@ -32,7 +44,12 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-    fun loadLocation(){
+    private fun setTodayEnterPeople(){
+        viewModelScope.launch {
+            databaseRepository.setTodayEnterPeople(FirebaseManager.firebaseAuth.uid.toString())
+        }
+    }
+    private fun loadLocation(){
         viewModelScope.launch {
             locationTracker.getCurrentLocation()?.let{ location ->
                 Log.d("tag", location.longitude.toString())
