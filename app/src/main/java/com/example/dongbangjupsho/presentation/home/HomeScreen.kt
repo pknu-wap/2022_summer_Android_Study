@@ -14,10 +14,9 @@ import androidx.navigation.NavController
 @Composable
     fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel() //todo state hoisting mainActivity
 ) {
         //firebase db
-        val totalCount = 32
         val isFirstVisit = true
 
     Scaffold(
@@ -29,7 +28,7 @@ import androidx.navigation.NavController
             verticalArrangement = Arrangement.Center
         ){
 
-            Text("현재 동방 인원 : $totalCount")
+            Text("현재 동방 인원 : ${viewModel.todayEnterPeople}")
 
             Spacer(modifier = Modifier.height(20.dp))
 
