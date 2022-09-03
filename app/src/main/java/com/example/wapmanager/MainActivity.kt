@@ -2,6 +2,7 @@ package com.example.wapmanager
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.wapmanager.databinding.ActivityMainBinding
@@ -10,12 +11,10 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding //optional 안씀 becuase lateinit
-
+    val userEmail = intent.getStringExtra("email").toString()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mBinding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(mBinding.root)
 
         //네비게이션 호스트
@@ -30,13 +29,12 @@ class MainActivity : AppCompatActivity() {
         val database = Firebase.database
         val myRef = database.getReference("message")
         myRef.setValue("Hello,Firebase!")
+
     }
 
-//    fun setMainFragment(){
-//        val mainFragment: MainFragment = MainFragment()
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.add(R.id.fragmentContainerView,mainFragment)
-//        transaction.commit()
-//    }
+
+
+
+
 }
 

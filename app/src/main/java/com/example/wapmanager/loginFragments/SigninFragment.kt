@@ -1,6 +1,7 @@
 package com.example.wapmanager.loginFragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.wapmanager.LoginActivity
+import com.example.wapmanager.MainActivity
 import com.example.wapmanager.R
 import com.example.wapmanager.databinding.FragmentSigninBinding
 import com.example.wapmanager.databinding.FragmentSignupBinding
@@ -79,7 +81,10 @@ class SigninFragment : Fragment() {
         }
     }
 
-    fun handleSuccessLogin(){
-//
+    private fun handleSuccessLogin(){
+        val intent = Intent(activity, MainActivity::class.java)
+        val email = binding.etEmail.text.toString()
+        intent.putExtra("email", email)
+        startActivity(intent)
     }
 }
