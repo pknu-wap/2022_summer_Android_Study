@@ -11,7 +11,7 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding //optional 안씀 becuase lateinit
-    val userEmail = intent.getStringExtra("email").toString()
+    val test = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         val database = Firebase.database
         val myRef = database.getReference("message")
         myRef.setValue("Hello,Firebase!")
+
+        val userEmail = intent.getStringExtra("email").toString()
 
     }
 
