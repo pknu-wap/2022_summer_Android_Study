@@ -1,15 +1,15 @@
 package com.example.wapmanager.model
 
 class User {
-    var id: String = ""
-    var password: String = ""
-    var name: String = ""
+    var studentId: String = ""
+    var studentName: String = ""
+    var clubUpDate: Long = 0
 
     constructor()
 
-    constructor(id:String, password:String, name:String){
-        this.id = id
-        this.password = password
-        this.name = name
+    constructor(studentId:String, studentName:String, clubUpDate:Long){
+        this.studentId = studentId
+        this.studentName = studentName
+        this.clubUpDate = clubUpDate
     }
 }
