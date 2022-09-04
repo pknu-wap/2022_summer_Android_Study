@@ -6,17 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dongbangjupsho.presentation.user.TextFieldState
 import com.example.dongbangjupsho.domain.model.UserInfo
-import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
+import com.example.dongbangjupsho.domain.use_case.firebase.auth.SignUp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class UserSignUpViewModel @Inject constructor(
-    private val firebaseRepository: FirebaseAuthRepository
+    private val signUp: SignUp
 ) : ViewModel(){
 
     private val _userId = mutableStateOf(TextFieldState(hint = "사용자 이름"))
@@ -69,35 +68,28 @@ class UserSignUpViewModel @Inject constructor(
                 )
             }
             is UserSignUpEvent.SignUpUser -> {
-                signUp()
+                userSignUp()
             }
         }
     }
-    private fun signUp(){
-        viewModelScope.launch{
-            viewModelScope.launch {
-                if (_userPassword.value.text == _userConfirmPassword.value.text) {
-                    try {
-                        if(firebaseRepository.signUp(UserInfo(
-                                userId = _userId.value.text,
-                                password = _userPassword.value.text))
-                        ) {
-                            _eventFlow.emit(UiEvent.SignUpUser)
-                        }else{
-                            _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
-                    }
-                } else {
-                    _eventFlow.emit(UiEvent.ShowSnackbar("비밀번호가 일치하지 않습니다.."))
+    private fun userSignUp(){
+        viewModelScope.launch {
+            if (_userPassword.value.text == _userConfirmPassword.value.text) {
+                val result = signUp.execute(UserInfo(
+                    userId = _userId.value.text,
+                    password = _userPassword.value.text))
+                if(result.successful)
+                    _eventFlow.emit(UiEvent.SignUpUser)
+                else{
+                    _eventFlow.emit(UiEvent.ShowSnackbar(result.errorMessage))
                 }
+            } else {
+                _eventFlow.emit(UiEvent.ShowSnackbar("비밀번호가 일치하지 않습니다.."))
             }
         }
     }
     sealed class UiEvent{
-        data class ShowSnackbar(val message: String): UiEvent()
+        data class ShowSnackbar(val message: String?): UiEvent()
         object SignUpUser: UiEvent()
     }
 }

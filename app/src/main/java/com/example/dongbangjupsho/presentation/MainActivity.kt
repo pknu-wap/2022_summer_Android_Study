@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,6 +21,7 @@ import com.example.dongbangjupsho.presentation.home.HomeViewModel
 import com.example.dongbangjupsho.presentation.home.UserEnterEvent
 import com.example.dongbangjupsho.presentation.user.signup.UserSignUpViewModel
 import com.example.dongbangjupsho.presentation.user.signin.UserSignInScreen
+import com.example.dongbangjupsho.presentation.user.signin.UserSignInViewModel
 import com.example.dongbangjupsho.presentation.user.signup.UserSignUpScreen
 import com.example.dongbangjupsho.presentation.util.Screen
 import com.example.dongbangjupsho.ui.theme.DongBangJupShoTheme
@@ -29,7 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel : HomeViewModel by viewModels()
+    private val homeViewModel : HomeViewModel by viewModels()
+
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +40,7 @@ class MainActivity : ComponentActivity() {
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ){
-            viewModel.onEvent(UserEnterEvent.LoadLocation)
+            homeViewModel.onEvent(UserEnterEvent.LoadLocation)
         }
         permissionLauncher.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,

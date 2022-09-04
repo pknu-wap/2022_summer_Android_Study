@@ -1,37 +1,28 @@
 package com.example.dongbangjupsho.presentation.user.signin
 
-import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dongbangjupsho.presentation.user.TextFieldState
 import com.example.dongbangjupsho.domain.model.UserInfo
-import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
+import com.example.dongbangjupsho.domain.use_case.firebase.auth.SignIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserSignInViewModel @Inject constructor(
-    private val appContext: Application,
-    private val firebaseRepository: FirebaseAuthRepository
+    private val signIn: SignIn
 ): ViewModel() {
-
-    companion object{
-        const val TAG = "KaKaoAuthViewModel"
-    }
 
     private val _userId = mutableStateOf(TextFieldState(hint = "사용자 이름"))
     val userId : State<TextFieldState> = _userId
 
     private val _userPassword = mutableStateOf(TextFieldState(hint = "비밀번호"))
     val userPassword : State<TextFieldState> = _userPassword
-
-    val signInState = MutableStateFlow<Boolean>(false)
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -62,29 +53,29 @@ class UserSignInViewModel @Inject constructor(
                 )
             }
             is UserSignInEvent.SignInUser ->{
-                signIn()
+                signInUser()
             }
         }
     }
 
-    private fun signIn(){
+    private fun signInUser(){
         viewModelScope.launch{
-            val result = firebaseRepository.signIn(
+            val result = signIn.execute(
                 UserInfo(
                 userId.value.text,
                 userPassword.value.text
                 )
             )
-            if(result){
+            if(result.successful){
                 _eventFlow.emit(UiEvent.SignInUser)
             }else{
-                _eventFlow.emit(UiEvent.ShowSnackbar("네트워크 연결을 확인해주세요."))
+                _eventFlow.emit(UiEvent.ShowSnackbar(result.errorMessage))
             }
         }
     }
 
     sealed class UiEvent{
-        data class ShowSnackbar(val message: String): UiEvent()
+        data class ShowSnackbar(val message: String?): UiEvent()
         object SignInUser: UiEvent()
     }
 

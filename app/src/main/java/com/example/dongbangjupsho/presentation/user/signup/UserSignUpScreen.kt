@@ -29,7 +29,7 @@ fun UserSignUpScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event){
                 is UserSignUpViewModel.UiEvent.ShowSnackbar ->{
-                    scaffoldState.snackbarHostState.showSnackbar(event.message)
+                    scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
                 }
                 is UserSignUpViewModel.UiEvent.SignUpUser ->{
                     navController.navigate(Screen.UserSignInScreen.route)

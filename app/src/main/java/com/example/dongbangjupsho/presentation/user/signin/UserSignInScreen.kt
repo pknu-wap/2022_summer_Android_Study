@@ -22,7 +22,6 @@ fun UserSignInScreen(
     navController: NavController,
     viewModel: UserSignInViewModel = hiltViewModel()
 ){
-
     val userIdState = viewModel.userId.value
     val passwordState = viewModel.userPassword.value
 
@@ -32,7 +31,7 @@ fun UserSignInScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event){
                 is UserSignInViewModel.UiEvent.ShowSnackbar ->{
-                    scaffoldState.snackbarHostState.showSnackbar(event.message)
+                    scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
                 }
                 is UserSignInViewModel.UiEvent.SignInUser ->{
                     navController.navigate(Screen.HomeScreen.route)
