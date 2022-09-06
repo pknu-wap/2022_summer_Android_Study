@@ -1,13 +1,19 @@
 package com.example.dongbangjupsho.data.repository
+import android.content.SharedPreferences
 import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
 import com.example.dongbangjupsho.domain.model.UserInfo
 import com.example.dongbangjupsho.domain.util.DB_KEY.Companion.USER
 import com.example.dongbangjupsho.domain.util.FirebaseManager.firebaseAuth
 import com.example.dongbangjupsho.domain.util.FirebaseManager.firebaseDatabase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 
-class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
+class FirebaseAuthRepositoryImpl(
+    private val prefs : SharedPreferences
+) : FirebaseAuthRepository{
     override suspend fun signUp(userInfo: UserInfo): Boolean =
         suspendCancellableCoroutine { cont ->
             firebaseAuth.createUserWithEmailAndPassword(userInfo.email, userInfo.password)
@@ -24,11 +30,23 @@ class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
                 }
         }
 
-    override suspend fun signIn(userInfo: UserInfo): Boolean =
+    override suspend fun signIn(email:String, password: String): Boolean =
         suspendCancellableCoroutine { cont ->
-            firebaseAuth.signInWithEmailAndPassword(userInfo.email, userInfo.password)
+            firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    cont.resume(true)
+                    it.user?.let{
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val nickName = getUserNickName(it.uid)
+                            if (nickName != null) {
+                                prefs.edit()
+                                    .putString("nickName", nickName)
+                                    .apply()
+                                cont.resume(true)
+                            } else {
+                                cont.resume(false)
+                            }
+                        }
+                    }
                 }
                 .addOnFailureListener{
                     cont.resume(false)
@@ -51,5 +69,18 @@ class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
                 .addOnCanceledListener {
                     cont.resume(false)
                 }
+        }
+    private suspend fun getUserNickName(uid: String): String? =
+        suspendCancellableCoroutine { cont ->
+            firebaseDatabase.reference.child(USER).child(uid).child("userInfo").child("nickName")
+                .addValueEventListener(object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        cont.resume(snapshot.value.toString())
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        cont.resume(null)
+                    }
+                })
         }
 }

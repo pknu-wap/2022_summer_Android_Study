@@ -1,5 +1,6 @@
 package com.example.dongbangjupsho.di
 
+import android.content.SharedPreferences
 import com.example.dongbangjupsho.data.repository.FirebaseAuthRepositoryImpl
 import com.example.dongbangjupsho.data.repository.FirebaseDatabaseRepositoryImpl
 import com.example.dongbangjupsho.domain.repository.FirebaseAuthRepository
@@ -16,8 +17,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseRepository(): FirebaseAuthRepository{
-        return FirebaseAuthRepositoryImpl()
+    fun provideFirebaseRepository(prefs: SharedPreferences): FirebaseAuthRepository{
+        return FirebaseAuthRepositoryImpl(prefs)
     }
 
     @Provides
