@@ -1,95 +1,112 @@
 package com.example.dongbangjupsho.presentation.user.signup
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dongbangjupsho.presentation.user.TextFieldState
 import com.example.dongbangjupsho.domain.model.UserInfo
 import com.example.dongbangjupsho.domain.use_case.firebase.auth.SignUp
+import com.example.dongbangjupsho.domain.use_case.validate.ValidateEmail
+import com.example.dongbangjupsho.domain.use_case.validate.ValidateNickName
+import com.example.dongbangjupsho.domain.use_case.validate.ValidatePassword
+import com.example.dongbangjupsho.domain.use_case.validate.ValidateRepeatedPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserSignUpViewModel @Inject constructor(
-    private val signUp: SignUp
+    private val signUp: SignUp,
+    private val validateEmail: ValidateEmail,
+    private val validateNickName: ValidateNickName,
+    private val validatePassword: ValidatePassword,
+    private val validateRepeatedPassword: ValidateRepeatedPassword,
 ) : ViewModel(){
 
-    private val _userId = mutableStateOf(TextFieldState(hint = "사용자 이름"))
-    val userId : State<TextFieldState> = _userId
+    var state by mutableStateOf(UserSignUpFormState())
 
-    private val _userPassword = mutableStateOf(TextFieldState(hint = "비밀번호"))
-    val userPassword : State<TextFieldState> = _userPassword
-
-    private val _userConfirmPassword = mutableStateOf(TextFieldState(hint = "비밀번호 확인"))
-    val userConfirmPassword : State<TextFieldState> = _userConfirmPassword
-
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
+    private val validationEventChannel = Channel<SignUpEvent>()
+    val validationEvents = validationEventChannel.receiveAsFlow()
 
     fun onEvent(event: UserSignUpEvent){
         when(event){
-            is UserSignUpEvent.EnteredUserId ->{
-                _userId.value = userId.value.copy(
-                    text = event.value
-                )
-            }
-            is UserSignUpEvent.ChangeUserIdFocus ->{
-                _userId.value = userId.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            userId.value.text.isBlank()
+            is UserSignUpEvent.EmailChanged ->{
+                state = state.copy(
+                    email = event.email
                 )
             }
 
-            is UserSignUpEvent.EnteredPassword ->{
-                _userPassword.value = userPassword.value.copy(
-                    text = event.value
+            is UserSignUpEvent.PasswordChanged ->{
+                state = state.copy(
+                    password = event.password
                 )
             }
-            is UserSignUpEvent.ChangePasswordFocus ->{
-                _userPassword.value = userPassword.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            userPassword.value.text.isBlank()
+
+            is UserSignUpEvent.RepeatedPasswordChanged ->{
+                state = state.copy(
+                    repeatedPassword = event.repeatedPassword
                 )
             }
-            is UserSignUpEvent.EnteredConfirmPassword ->{
-                _userConfirmPassword.value = userConfirmPassword.value.copy(
-                    text = event.value
+
+            is UserSignUpEvent.NickNameChanged ->{
+                state = state.copy(
+                    nickname = event.nickname
                 )
             }
-            is UserSignUpEvent.ChangeConfirmPasswordFocus ->{
-                _userConfirmPassword.value = userConfirmPassword.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            userConfirmPassword.value.text.isBlank()
-                )
-            }
-            is UserSignUpEvent.SignUpUser -> {
-                userSignUp()
+
+            is UserSignUpEvent.Submit -> {
+                validateData()
             }
         }
     }
-    private fun userSignUp(){
+    private fun validateData(){
+        val emailResult = validateEmail.execute(state.email)
+        val nickNameResult = validateNickName.execute(state.nickname)
+        val passwordResult = validatePassword.execute(state.password)
+        val repeatedPasswordResult = validateRepeatedPassword.execute(state.password, state.repeatedPassword)
+
+        val hasError = listOf(
+            emailResult,
+            nickNameResult,
+            passwordResult,
+            repeatedPasswordResult
+        ).any{
+            !it.successful
+        }
+        if(hasError){
+            state = state.copy(
+                emailError = emailResult.errorMessage,
+                nicknameError = nickNameResult.errorMessage,
+                passwordError = passwordResult.errorMessage,
+                repeatedPasswordError = repeatedPasswordResult.errorMessage
+            )
+            return
+        }
+        submitData()
+    }
+
+    private fun submitData(){
         viewModelScope.launch {
-            if (_userPassword.value.text == _userConfirmPassword.value.text) {
-                val result = signUp.execute(UserInfo(
-                    userId = _userId.value.text,
-                    password = _userPassword.value.text))
-                if(result.successful)
-                    _eventFlow.emit(UiEvent.SignUpUser)
-                else{
-                    _eventFlow.emit(UiEvent.ShowSnackbar(result.errorMessage))
-                }
-            } else {
-                _eventFlow.emit(UiEvent.ShowSnackbar("비밀번호가 일치하지 않습니다.."))
+            val signUpResult = signUp.execute(
+                UserInfo(
+                    state.email,
+                    state.nickname,
+                    state.password
+                )
+            )
+            if(!signUpResult.successful){
+                validationEventChannel.send(SignUpEvent.Failure(signUpResult.errorMessage))
+            }else{
+                validationEventChannel.send(SignUpEvent.Success)
             }
         }
     }
-    sealed class UiEvent{
-        data class ShowSnackbar(val message: String?): UiEvent()
-        object SignUpUser: UiEvent()
+
+    sealed class SignUpEvent{
+        data class Failure(val message: String?): SignUpEvent()
+        object Success: SignUpEvent()
     }
 }

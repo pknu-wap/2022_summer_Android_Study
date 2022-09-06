@@ -1,15 +1,10 @@
 package com.example.dongbangjupsho.presentation.user.signup
-
-import androidx.compose.ui.focus.FocusState
-
 sealed class UserSignUpEvent {
 
-    data class EnteredUserId(val value: String) : UserSignUpEvent()
-    data class ChangeUserIdFocus(val focusState: FocusState): UserSignUpEvent()
-    data class EnteredPassword(val value: String) : UserSignUpEvent()
-    data class ChangePasswordFocus(val focusState: FocusState): UserSignUpEvent()
-    data class EnteredConfirmPassword(val value: String) : UserSignUpEvent()
-    data class ChangeConfirmPasswordFocus(val focusState: FocusState): UserSignUpEvent()
+    data class EmailChanged(val email: String) : UserSignUpEvent()
+    data class PasswordChanged(val password: String) : UserSignUpEvent()
+    data class RepeatedPasswordChanged(val repeatedPassword: String) : UserSignUpEvent()
+    data class NickNameChanged(val nickname : String): UserSignUpEvent()
 
-    object SignUpUser : UserSignUpEvent()
+    object Submit : UserSignUpEvent()
 }

@@ -1,38 +1,37 @@
 package com.example.dongbangjupsho.presentation.user.signup
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.dongbangjupsho.presentation.user.component.HintTextField
 import com.example.dongbangjupsho.presentation.util.Screen
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
+
 
 @Composable
 fun UserSignUpScreen(
     navController: NavController,
     viewModel: UserSignUpViewModel = hiltViewModel()
 ){
-    val userIdState = viewModel.userId.value
-    val passwordState = viewModel.userPassword.value
-    val confirmPasswordState = viewModel.userConfirmPassword.value
+    val state = viewModel.state
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(true){
-        viewModel.eventFlow.collectLatest { event ->
+        viewModel.validationEvents.collect { event ->
             when(event){
-                is UserSignUpViewModel.UiEvent.ShowSnackbar ->{
-                    scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
-                }
-                is UserSignUpViewModel.UiEvent.SignUpUser ->{
+                is UserSignUpViewModel.SignUpEvent.Success ->{
                     navController.navigate(Screen.UserSignInScreen.route)
+                }
+                is UserSignUpViewModel.SignUpEvent.Failure ->{
+                    scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
                 }
             }
         }
@@ -43,7 +42,8 @@ fun UserSignUpScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(32.dp),
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "회원 가입",
@@ -52,52 +52,103 @@ fun UserSignUpScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
 
-            HintTextField(
-                text = userIdState.text,
-                hint = userIdState.hint,
+            TextField(
+                value = state.email,
                 onValueChange = {
-                    viewModel.onEvent(UserSignUpEvent.EnteredUserId(it))
+                    viewModel.onEvent(UserSignUpEvent.EmailChanged(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(UserSignUpEvent.ChangeUserIdFocus(it))
+                isError = state.emailError != null,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                              Text(text = "이메일")
                 },
-                isHintVisible = userIdState.isHintVisible,
-                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                )
             )
+            if(state.emailError != null){
+                Text(
+                    text = state.emailError,
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            HintTextField(
-                text = passwordState.text,
-                hint = passwordState.hint,
+            TextField(
+                value = state.nickname,
                 onValueChange = {
-                    viewModel.onEvent(UserSignUpEvent.EnteredPassword(it))
+                    viewModel.onEvent(UserSignUpEvent.NickNameChanged(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(UserSignUpEvent.ChangePasswordFocus(it))
-                },
-                isHintVisible = passwordState.isHintVisible,
-                singleLine = true,
+                isError = state.nicknameError != null,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = "닉네임")
+                }
             )
+            if(state.nicknameError != null){
+                Text(
+                    text = state.nicknameError,
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            HintTextField(
-                text = confirmPasswordState.text,
-                hint = confirmPasswordState.hint,
+            TextField(
+                value = state.password,
                 onValueChange = {
-                    viewModel.onEvent(UserSignUpEvent.EnteredConfirmPassword(it))
+                    viewModel.onEvent(UserSignUpEvent.PasswordChanged(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(UserSignUpEvent.ChangeConfirmPasswordFocus(it))
+                isError = state.passwordError != null,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = "비밀번호")
                 },
-                isHintVisible = confirmPasswordState.isHintVisible,
-                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+                visualTransformation = PasswordVisualTransformation()
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            if(state.passwordError != null){
+                Text(
+                    text = state.passwordError,
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = state.repeatedPassword,
+                onValueChange = {
+                    viewModel.onEvent(UserSignUpEvent.RepeatedPasswordChanged(it))
+                },
+                isError = state.repeatedPasswordError != null,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = "비밀번호 확인")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+                visualTransformation = PasswordVisualTransformation()
+            )
+            if(state.repeatedPasswordError != null){
+                Text(
+                    text = state.repeatedPasswordError,
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { viewModel.onEvent(UserSignUpEvent.SignUpUser) }
+                onClick = { viewModel.onEvent(UserSignUpEvent.Submit) }
             ) {
                 Text("회원가입")
             }
