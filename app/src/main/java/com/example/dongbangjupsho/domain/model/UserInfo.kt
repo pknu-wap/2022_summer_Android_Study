@@ -1,6 +1,7 @@
 package com.example.dongbangjupsho.domain.model
 
 data class UserInfo (
-    val userId: String = "",
+    val email: String = "",
+    val nickName: String = "",
     val password: String = ""
         )

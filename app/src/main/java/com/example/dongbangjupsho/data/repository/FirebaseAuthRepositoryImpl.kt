@@ -10,7 +10,7 @@ import kotlin.coroutines.resume
 class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
     override suspend fun signUp(userInfo: UserInfo): Boolean =
         suspendCancellableCoroutine { cont ->
-            firebaseAuth.createUserWithEmailAndPassword(userInfo.userId, userInfo.password)
+            firebaseAuth.createUserWithEmailAndPassword(userInfo.email, userInfo.password)
                 .addOnSuccessListener {
                     CoroutineScope(Dispatchers.IO).launch {
                         cont.resume(registerUser(userInfo))
@@ -26,7 +26,7 @@ class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
 
     override suspend fun signIn(userInfo: UserInfo): Boolean =
         suspendCancellableCoroutine { cont ->
-            firebaseAuth.signInWithEmailAndPassword(userInfo.userId, userInfo.password)
+            firebaseAuth.signInWithEmailAndPassword(userInfo.email, userInfo.password)
                 .addOnSuccessListener {
                     cont.resume(true)
                 }
@@ -41,7 +41,7 @@ class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
     private suspend fun registerUser(userInfo: UserInfo): Boolean =
         suspendCancellableCoroutine { cont ->
             firebaseDatabase.reference.child(USER).child(firebaseAuth.uid.toString())
-                .child("userId").setValue(userInfo.userId)
+                .child("userInfo").setValue(userInfo.copy(password = ""))
                 .addOnSuccessListener {
                     cont.resume(true)
                 }
