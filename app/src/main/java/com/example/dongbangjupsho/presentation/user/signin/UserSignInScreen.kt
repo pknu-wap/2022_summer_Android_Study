@@ -1,39 +1,35 @@
 package com.example.dongbangjupsho.presentation.user.signin
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.dongbangjupsho.R
-import com.example.dongbangjupsho.presentation.user.component.HintTextField
 import com.example.dongbangjupsho.presentation.util.Screen
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun UserSignInScreen(
     navController: NavController,
     viewModel: UserSignInViewModel = hiltViewModel()
 ){
-    val userIdState = viewModel.userId.value
-    val passwordState = viewModel.userPassword.value
-
     val scaffoldState = rememberScaffoldState()
+    val state = viewModel.state
 
     LaunchedEffect(true){
-        viewModel.eventFlow.collectLatest { event ->
+        viewModel.signInEvents.collect { event ->
             when(event){
-                is UserSignInViewModel.UiEvent.ShowSnackbar ->{
+                is UserSignInViewModel.SignInEvent.Failure ->{
                     scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
                 }
-                is UserSignInViewModel.UiEvent.SignInUser ->{
+                is UserSignInViewModel.SignInEvent.Success->{
                     navController.navigate(Screen.HomeScreen.route)
                 }
             }
@@ -43,36 +39,40 @@ fun UserSignInScreen(
         scaffoldState = scaffoldState
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            HintTextField(
-                text = userIdState.text,
-                hint = userIdState.hint,
+            TextField(
+                value = state.email,
                 onValueChange = {
-                    viewModel.onEvent(UserSignInEvent.EnteredUserId(it))
+                    viewModel.onEvent(UserSignInEvent.EmailChanged(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(UserSignInEvent.ChangeUserIdFocus(it))
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = "이메일")
                 },
-                isHintVisible = userIdState.isHintVisible,
-                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            HintTextField(
-                text = passwordState.text,
-                hint = passwordState.hint,
+            TextField(
+                value = state.password,
                 onValueChange = {
-                    viewModel.onEvent(UserSignInEvent.EnteredPassword(it))
+                    viewModel.onEvent(UserSignInEvent.PasswordChanged(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(UserSignInEvent.ChangePasswordFocus(it))
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = "비밀번호")
                 },
-                isHintVisible = passwordState.isHintVisible,
-                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+                visualTransformation = PasswordVisualTransformation()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -81,7 +81,7 @@ fun UserSignInScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { viewModel.onEvent(UserSignInEvent.SignInUser) }
+                    onClick = { viewModel.onEvent(UserSignInEvent.Submit) }
                 ) {
                     Text("로그인")
                 }
@@ -91,24 +91,6 @@ fun UserSignInScreen(
                 ) {
                     Text("회원가입")
                 }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            IconButton(
-                onClick = {
-                    //todo 화면 전환 처리 navigation
-                },
-                modifier = Modifier
-                    .height(40.dp)
-                    .wrapContentWidth(Alignment.CenterHorizontally)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.kakao_login),
-                    contentDescription = "Kakao_login",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Fit,
-                )
             }
 
         }
