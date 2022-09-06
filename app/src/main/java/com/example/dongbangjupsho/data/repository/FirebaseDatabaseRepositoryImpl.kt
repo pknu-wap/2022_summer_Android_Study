@@ -1,6 +1,7 @@
 package com.example.dongbangjupsho.data.repository
 
 import android.util.Log
+import com.example.dongbangjupsho.domain.model.UserEnterInfo
 import com.example.dongbangjupsho.domain.repository.FirebaseDatabaseRepository
 import com.example.dongbangjupsho.domain.util.DB_KEY.Companion.HOME
 import com.example.dongbangjupsho.domain.util.FirebaseManager
@@ -8,13 +9,15 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.coroutines.resume
 
 class FirebaseDatabaseRepositoryImpl : FirebaseDatabaseRepository {
 
-    override suspend fun getTodayEnterPeople(): String? =
+    override suspend fun getTodayEnterPeople(timeStamp: String): String? =
         suspendCancellableCoroutine { cont ->
-            FirebaseManager.firebaseDatabase.reference.child(HOME).child("TodayEnter")
+            FirebaseManager.firebaseDatabase.reference.child(HOME).child("TodayEnter").child(timeStamp)
                 .addChildEventListener(object : ChildEventListener {
                     override fun onChildAdded(
                         snapshot: DataSnapshot,
@@ -31,10 +34,10 @@ class FirebaseDatabaseRepositoryImpl : FirebaseDatabaseRepository {
                 })
     }
 
-    override suspend fun setTodayEnterPeople(uid: String): Boolean =
+    override suspend fun setTodayEnterPeople(userEnterInfo: UserEnterInfo): Boolean =
         suspendCancellableCoroutine { cont ->
             FirebaseManager.firebaseDatabase.reference.child(HOME).child("TodayEnter")
-                .child("uid").setValue(uid)
+                .child(userEnterInfo.uid).child(userEnterInfo.nickName).setValue(userEnterInfo.nickName)
                 .addOnSuccessListener {
                     cont.resume(true)
                 }

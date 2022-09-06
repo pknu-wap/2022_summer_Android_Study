@@ -1,7 +1,8 @@
 package com.example.dongbangjupsho.domain.repository
 
-interface FirebaseDatabaseRepository {
+import com.example.dongbangjupsho.domain.model.UserEnterInfo
 
-    suspend fun getTodayEnterPeople(): String?
-    suspend fun setTodayEnterPeople(uid: String): Boolean
+interface FirebaseDatabaseRepository {
+    suspend fun getTodayEnterPeople(timeStamp: String): String?
+    suspend fun setTodayEnterPeople(userEnterInfo: UserEnterInfo): Boolean
 }
