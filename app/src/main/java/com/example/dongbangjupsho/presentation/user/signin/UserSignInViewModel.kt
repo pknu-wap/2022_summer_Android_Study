@@ -49,10 +49,8 @@ class UserSignInViewModel @Inject constructor(
     private fun submitData(){
         viewModelScope.launch{
             val result = signIn.execute(
-                UserInfo(
-                    state.email,
-                    state.password
-                )
+                state.email,
+                state.password
             )
             if(result.successful){
                 signInEventChannel.send(SignInEvent.Success)
