@@ -1,15 +1,9 @@
 package com.example.wapmanager.model
 
-class User {
-    var studentId: String = ""
-    var studentName: String = ""
-    var clubUpDate: Long = 0
+import com.google.firebase.database.IgnoreExtraProperties
 
-    constructor()
-
-    constructor(studentId:String, studentName:String, clubUpDate:Long){
-        this.studentId = studentId
-        this.studentName = studentName
-        this.clubUpDate = clubUpDate
-    }
+@IgnoreExtraProperties
+data class User(val profile: String? = null,val userId: String? = null, val userName: String? = null, val clubUpDate: Long) {
+    // Null default values create a no-argument default constructor, which is needed
+    // for deserialization from a DataSnapshot.
 }
