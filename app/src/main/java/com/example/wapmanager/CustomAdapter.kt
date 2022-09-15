@@ -27,8 +27,8 @@ class CustomAdapter : RecyclerView.Adapter<Holder>() {
 
 class Holder(val binding: ItemRecyclerBinding): RecyclerView.ViewHolder(binding.root){
     fun setUser(user:User){
-        binding.txStudentId.text = "${user.studentId}"
-        binding.txName.text = "${user.studentName}"
+        binding.txStudentId.text = "${user.userId}"
+        binding.txName.text = "${user.userName}"
 
         var sdf = SimpleDateFormat("yyyy/MM/dd")
         var formattedDate = sdf.format(user.clubUpDate)

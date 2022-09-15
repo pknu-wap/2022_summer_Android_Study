@@ -22,7 +22,8 @@ import com.google.firebase.ktx.Firebase
 class ListFragment : Fragment() {
 
     private var mBinding : FragmentListBinding? = null
-    private lateinit var database: DatabaseReference
+    private val currentUserDB : DatabaseReference by lazy{
+        Firebase.database.reference.child("User")}
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,6 +36,7 @@ class ListFragment : Fragment() {
         adapter.listData = data
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
+        writeNewUser("000","201912345","구교황", 0)
         return mBinding?.root
     }
 
@@ -45,24 +47,31 @@ class ListFragment : Fragment() {
 
     fun loadData(): MutableList<User>{
         val data:MutableList<User> = mutableListOf()
+        val user1 = User("000","201912345","구교황", 0)
+        val user2 = User("001","201412566","박정빈", 0)
+        data.add(user1)
+        data.add(user2)
 
-        database.child("User").get().addOnSuccessListener {
-            val user = it.getValue<User>()
-        }
-//            val id = "0000${i}"
-//            val name = "홍길동${i}"
-//            val date = System.currentTimeMillis()
-//            var user = User("",id,name,date)
-//            data.add(user)
+//        for (i in 1..data.size) {
+//            = data.get(i)
 //        }
+
+//        database.child("User").get().addOnSuccessListener {
+//            val user = it.getValue<User>()
+//        }
+////            val id = "0000${i}"
+////            val name = "홍길동${i}"
+////            val date = System.currentTimeMillis()
+////            var user = User("",id,name,date)
+////            data.add(user)
+////        }
 
         return data
     }
 
     fun writeNewUser(profile:String ,userId: String, userName: String, clubUpDate:Long) {
-        val user = User("",userId,userName,clubUpDate)
-
-        database.child("User").child(userId).setValue(user)
+        val user1 = User(profile,userId,userName,clubUpDate)
+        currentUserDB.child("user02").setValue(user1)
 
     }
 
